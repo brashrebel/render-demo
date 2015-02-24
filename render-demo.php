@@ -15,30 +15,31 @@ class Render_Demo_Rules {
 	public function __construct() {
 		register_activation_hook( __FILE__, array( $this, 'add_role' ) );
 		register_deactivation_hook( __FILE__, array( $this, 'remove_role' ) );
-		register_activation_hook( __FILE__, array( $this, 'my_activation' ) );
-		add_action( 'purge', array( $this, 'do_this_hourly' ) );
+		register_activation_hook( __FILE__, array( $this, 'activation' ) );
+		add_action( 'reset', array( $this, 'do_this_hourly' ) );
 	}
 
-	public static function pd_remove_roles() {
+	public static function remove_role() {
 		remove_role( 'demo' );
 	}
 
 	public static function add_role() {
 		add_role( 'demo', 'Demo User', array(
-				'read',
-				'edit_posts',
-				'edit_published_posts',
-				'edit_theme_options',
+				'read' => true,
+				'edit_posts' => true,
+				'edit_published_posts' => true,
+				'edit_theme_options' => true,
 			)
 		);
 	}
 
-	public static function my_activation() {
-		wp_schedule_event( current_time( 'timestamp' ), 'hourly', 'purge' );
+	public static function activation() {
+		wp_schedule_event( current_time( 'timestamp' ), 'hourly', 'reset' );
 	}
 
 	public function do_this_hourly() {
-		// do something every hour
+		// reset all theme options
+		// delete all new posts
 	}
 
 }
