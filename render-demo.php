@@ -15,6 +15,8 @@ class Render_Demo_Rules {
 	public function __construct() {
 		register_activation_hook( __FILE__, array( $this, 'add_role' ) );
 		register_deactivation_hook( __FILE__, array( $this, 'remove_role' ) );
+		register_activation_hook( __FILE__, array( $this, 'my_activation' ) );
+		add_action( 'purge', array( $this, 'do_this_hourly' ) );
 	}
 
 	public static function pd_remove_roles() {
@@ -29,6 +31,14 @@ class Render_Demo_Rules {
 				'edit_theme_options',
 			)
 		);
+	}
+
+	public static function my_activation() {
+		wp_schedule_event( current_time( 'timestamp' ), 'hourly', 'purge' );
+	}
+
+	public function do_this_hourly() {
+		// do something every hour
 	}
 
 }
